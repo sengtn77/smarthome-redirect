@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Returning to SmartHome…</title>
+<p style="font: 16px system-ui; padding: 24px">Returning to the SmartHome app…</p>
+<script>
+  // eWelink redirects here with ?code=…&region=…&state=…  (state is JSON set by the app: {r: returnUrl, n: nonce}).
+  // Forward the whole query string to the app's deep link. Only known app schemes are allowed.
+  (function () {
+    var query = location.search;
+    try {
+      var state = JSON.parse(new URLSearchParams(query).get('state'));
+      var target = String(state.r);
+      if (/^(exp|exps|smarthome):\/\//.test(target)) {
+        location.replace(target + (target.indexOf('?') === -1 ? '' : '&') + (target.indexOf('?') === -1 ? query : query.slice(1)));
+        return;
+      }
+    } catch (e) {}
+    document.body.textContent = 'Invalid login response.';
+  })();
+</script>
