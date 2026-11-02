@@ -1,0 +1,17 @@
+# seng AI SDLC settings for this repo. Read by the seng-harness and seng-orch plugins.
+tracker: github              # github | none
+default_branch: main
+coverage_min: 80             # Definition of Done: coverage ≥ 80%
+max_attempts: 3              # Principle 10: attempts before escalating to a human
+
+verify:                      # Principle 1: commands that prove work is done. Empty = not applicable.
+  # The repo has no tests yet. Issue #1 adds the test harness and fills these in.
+  build: ""                  # static page, nothing to build
+  lint: ""
+  typecheck: ""
+  test: ""
+  coverage: ""
+
+labels:
+  ready: agent-ready                 # Gate 1: a lead applies this after approving the design
+  human_review: human-review-required # reserved for human implementation
