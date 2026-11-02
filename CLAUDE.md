@@ -10,11 +10,22 @@ This is a security-sensitive path: it handles OAuth authorization codes and choo
 
 ## Commands
 
-No build, lint or test commands exist yet. They are added by the first task (see `.seng/config.yaml`, `verify.*`). Node 24 is available locally, so `node --test` is the intended test runner.
+There is no build or lint step and there are no dependencies (see `.seng/config.yaml`, `verify.*`). Node 24 is available locally.
+
+- Test: `node --test` (tests live in `test/`, e.g. `test/redirect.test.js`)
+- Coverage: `node --test --experimental-test-coverage` (Definition of Done requires ≥ 80%)
+
+CI runs the tests via `.github/workflows/test.yml`.
 
 ## Architecture
 
-A single static file, `index.html`, with an inline script. There is no server and no dependencies.
+A static page with no server and no dependencies. `index.html` has an inline `<script type="module">` that imports `resolveTarget` from `./src/redirect.js`. `resolveTarget(search)` holds the redirect decision logic: it parses `state`, allows only the `exp`, `exps` and `smarthome` schemes, and returns the target URL with the query string appended, or `null` if invalid. `index.html` calls it and performs the `location.replace`, treating a throw as invalid. `package.json` sets `"type": "module"` so Node tests can import `src/redirect.js`.
+
+### Deployment notes
+
+- `src/` must be published next to `index.html`; the page fails without `src/redirect.js`.
+- Keep the `resolveTarget` contract stable. If it changes, update the import URL in `index.html` with a `?v=` cache-busting query (e.g. `./src/redirect.js?v=2`) in the same commit.
+- Opening `index.html` via `file://` no longer works because browsers block module imports there. Serve it over HTTP (e.g. `npx serve` or `python3 -m http.server`) to test locally.
 
 ## AI SDLC
 This repo follows the seng AI SDLC (seng-harness + seng-orch plugins).

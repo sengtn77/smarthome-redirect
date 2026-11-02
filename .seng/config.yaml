@@ -5,12 +5,12 @@ coverage_min: 80             # Definition of Done: coverage ≥ 80%
 max_attempts: 3              # Principle 10: attempts before escalating to a human
 
 verify:                      # Principle 1: commands that prove work is done. Empty = not applicable.
-  # The repo has no tests yet. Issue #1 adds the test harness and fills these in.
+  # Tests use the built-in Node test runner (node --test); no dependencies needed.
   build: ""                  # static page, nothing to build
   lint: ""
   typecheck: ""
-  test: ""
-  coverage: ""
+  test: "node --test"
+  coverage: "node --test --experimental-test-coverage"
 
 labels:
   ready: agent-ready                 # Gate 1: a lead applies this after approving the design
